@@ -1,0 +1,118 @@
+﻿<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <title>15</title>
+  <style>
+    #field table td.empty {
+      background-color: #3366CC;
+      color: #3366CC;
+    }
+
+    #field table td {
+      background-color: #ffffff;
+      text-align: center;
+      vertical-align: middle;
+      height: 30px;
+      width: 30px;
+    }
+
+    #field table {
+      background-color: #3366CC;
+      cellpadding: 2px;
+      cellspacing: 5px;
+    }
+  </style>
+  <script src="http://code.jquery.com/jquery-1.10.2.js"></script>
+  <script>
+    $(document).ready(function () {
+      var patnash = {
+        n: 4,
+        m: 4,
+        stepCounter: 0,
+        field: [],
+        arrFinish: function () { return Array.apply(0, {length: (this.n * this.m)}).map(function (x, y) { return y; }) },
+        init: function () {
+          this.createField();
+          this.drawField();
+          this.bindHandlers();
+        },
+        createField: function () {
+          var shuffle = function (o) {
+            for (var j, x, i = o.length; i; j = Math.floor(Math.random() * i), x = o[--i], o[i] = o[j], o[j] = x);
+            return o;
+          };
+          var sArr = shuffle(this.arrFinish());
+          for (var i = 0; i < this.m; i++) {
+            this.field[i] = [];
+            for (var j = 0; j < this.n; j++) {
+              this.field[i][j] = sArr[i * this.n + j];
+            }
+          }
+        },
+        drawField: function () {
+          var htmlString = '<table>';
+          for (var i = 0; i < this.m; i++) {
+            htmlString += '<tr>';
+            for (var j = 0; j < this.n; j++) {
+              var isEmpty = this.field[i][j] == 0 ? ' class=empty' : '';
+              htmlString += "<td id=" + [i, j].join('') + isEmpty + ">" +
+                  this.field[i][j] + "</td>";
+            };
+            htmlString += '</tr>';
+          };
+          htmlString += '</table>';
+          $('#field').html(htmlString);
+        },
+        bindHandlers: function () {
+          $('#field td').on('click', function () {
+            var id = $(this).attr('id').split('');
+            if ($(this).text() == '0') return;
+            patnash.doMove(Number(id[0]), Number(id[1]));
+          });
+        },
+        unbindHandlers: function () {
+          $('#field td').unbind("click");
+        },
+        doMove: function (row, col) {
+          var inBounds = function (arr) {
+            return arr[0] < patnash.m && arr[0] >= 0 && arr[1] < patnash.n && arr[1] >= 0
+          };
+          var isEmpty = function (arr) {
+            return patnash.field[arr[0]][arr[1]] == 0
+          };
+          var nextCeils = [
+            [row - 1, col],
+            [row + 1, col],
+            [row, col - 1],
+            [row, col + 1]
+          ].filter(inBounds).filter(isEmpty);
+          if (nextCeils.length == 1) {
+            patnash.stepCounter += 1;
+            $('#feedback').text('step:' + patnash.stepCounter);
+            var emptyCeil = nextCeils[0];
+            patnash.field[emptyCeil[0]][emptyCeil[1]] = patnash.field[row][col];
+            patnash.field[row][col] = 0;
+            $('td#' + emptyCeil.join('')).removeClass('empty').text(patnash.field[emptyCeil[0]][emptyCeil[1]]);
+            $('td#' + row + col).addClass('empty').text(0);
+            if(this.isFinish()) {
+              $('#feedback').text('Finished on step ' + patnash.stepCounter);
+              this.unbindHandlers();
+            };
+          };
+        },
+        isFinish: function () {
+          var notZero = function(el) { return el != 0; };
+          var flatten = function(arr) { return arr.reduce(function(a, b){ return a.concat(b);}) };
+          return flatten(this.field).filter(notZero).join() == this.arrFinish().filter(notZero).join();
+        }
+      };
+      patnash.init();
+    });
+  </script>
+</head>
+<body>
+<div id='field'></div>
+<div id='feedback'></div>
+</body>
+</html>
