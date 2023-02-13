@@ -1,26 +1,32 @@
-﻿<!doctype html>
+<!doctype html>
 <html lang="en">
 <head>
   <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>15</title>
   <style>
     #field table td.empty {
       background-color: #3366CC;
       color: #3366CC;
     }
-
     #field table td {
       background-color: #ffffff;
       text-align: center;
       vertical-align: middle;
-      height: 30px;
-      width: 30px;
+      height: 100px;
+      width: 100px;
     }
-
+    @media screen and (max-width: 768px) {
+      #field table td {
+        height: 23vmin;
+        width: 23vmin;
+      }
+    }
     #field table {
       background-color: #3366CC;
-      cellpadding: 2px;
-      cellspacing: 5px;
+      border-spacing: 3px;
+      color: #3366CC;
+      font-size: 2rem;
     }
   </style>
   <script src="http://code.jquery.com/jquery-1.10.2.js"></script>
