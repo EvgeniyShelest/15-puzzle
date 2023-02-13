@@ -1,8 +1,8 @@
 # 15-puzzle
 
-jQuery based replication of classic puzzle game. 
+Javascript implementation of classic puzzle game. 
 
-The goal is to arrange shuffled numered pills.
+The goal is to arrange shuffled numered pills by using empty slot.
 
 # Initial sample:
 
